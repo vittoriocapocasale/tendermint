@@ -3,7 +3,6 @@ name: Docker
 # tags and pushes the image to the GitHub container registry.
 #
 on:
-  pull_request:
   # Allow manual image builds
   workflow_dispatch:
   push:
@@ -26,7 +25,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=informalsystems/tendermint
+          DOCKER_IMAGE="${{ env.REGISTRY }}/informalsystems/tendermint"
           VERSION=noop
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
