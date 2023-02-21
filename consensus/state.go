@@ -1050,6 +1050,7 @@ func (cs *State) needProofBlock(height int64) bool {
 
 	lastBlockMeta := cs.blockStore.LoadBlockMeta(height - 1)
 	if lastBlockMeta == nil {
+		cs.Logger.Error("Shortcircuiting needProofBlock")
 		return true
 	}
 
