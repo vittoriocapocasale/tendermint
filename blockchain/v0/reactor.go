@@ -120,6 +120,21 @@ func (bcR *BlockchainReactor) SwitchToFastSync(state sm.State) error {
 	bcR.initialState = state
 
 	bcR.pool.height = state.LastBlockHeight + 1
+
+	bcR.Logger.Info("Switching to blocksync at height ", bcR.pool.height)
+
+	blockMeta := bcR.store.LoadBlockMeta(state.LastBlockHeight)
+
+	if blockMeta == nil {
+		bcR.Logger.Error("No block meta found at height ", state.LastBlockHeight)
+	}
+
+	blockMetaLatest := bcR.store.LoadBlockMeta(state.LastBlockHeight + 1)
+
+	if blockMetaLatest == nil {
+		bcR.Logger.Error("No block meta found at height ", state.LastBlockHeight)
+	}
+
 	err := bcR.pool.Start()
 	if err != nil {
 		return err
