@@ -315,6 +315,16 @@ func execBlockOnProxyApp(
 		return nil, err
 	}
 
+	allTxs := make([]*abci.RequestDeliverTx, len(block.Txs))
+	for i, trx := range block.Txs {
+		allTxs[i] = &abci.RequestDeliverTx{Tx: trx}
+	}
+	err = proxyAppConn.DeliverAllSync(allTxs)
+	if err != nil {
+		logger.Error("error in proxyAppConn.BeginBlock", "err", err)
+		return nil, err
+	}
+
 	// run txs of block
 	for _, tx := range block.Txs {
 		proxyAppConn.DeliverTxAsync(abci.RequestDeliverTx{Tx: tx})
